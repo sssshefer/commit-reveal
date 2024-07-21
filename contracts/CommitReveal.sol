@@ -4,31 +4,22 @@ pragma solidity ^0.8.24;
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
 
-contract Lock {
-    uint public unlockTime;
-    address payable public owner;
+contract CommitReveal {
+    address[] public candidates;
+    mapping(address => bool) public isCandidate;
+    mapping(address => bytes32) public commits;
+    bool votingStatus;
 
-    event Withdrawal(uint amount, uint when);
+    constructor(address[] memory _candidates) {
+        require(_candidates.length >= 2, "Minimum number of candidates is 2");
 
-    constructor(uint _unlockTime) payable {
-        require(
-            block.timestamp < _unlockTime,
-            "Unlock time should be in the future"
-        );
-
-        unlockTime = _unlockTime;
-        owner = payable(msg.sender);
-    }
-
-    function withdraw() public {
-        // Uncomment this line, and the import of "hardhat/console.sol", to print a log in your terminal
-        // console.log("Unlock time is %o and block timestamp is %o", unlockTime, block.timestamp);
-
-        require(block.timestamp >= unlockTime, "You can't withdraw yet");
-        require(msg.sender == owner, "You aren't the owner");
-
-        emit Withdrawal(address(this).balance, block.timestamp);
-
-        owner.transfer(address(this).balance);
+        for (uint256 i = 0; i < _candidates.length; i++) {
+            require(
+                _candidates[i] != address(0),
+                "Don't include zero addresses in the array"
+            );
+            require(!isCandidate[_candidates[i]], "Duplicated candidate");
+            isCandidate[_candidates[i]] = true;
+        }
     }
 }
