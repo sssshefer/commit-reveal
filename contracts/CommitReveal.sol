@@ -1,8 +1,5 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
-
-// Uncomment this line to use console.log
-// import "hardhat/console.sol";
 
 contract CommitReveal {
     address[] public candidates;
@@ -14,7 +11,7 @@ contract CommitReveal {
 
     constructor(address[] memory _candidates) {
         require(_candidates.length >= 2, "Minimum number of candidates is 2");
-        
+
         for (uint256 i = 0; i < _candidates.length; i++) {
             require(
                 _candidates[i] != address(0),
@@ -22,7 +19,10 @@ contract CommitReveal {
             );
             require(!isCandidate[_candidates[i]], "Duplicated candidate");
             isCandidate[_candidates[i]] = true;
+            candidates.push(_candidates[i]);
         }
+
+        votingIsActive = true;
     }
 
     function commitVote(bytes32 _hashedVoteData) external {
@@ -39,7 +39,7 @@ contract CommitReveal {
         votesCount[candidate]++;
     }
 
-    function stopVoring() external {
+    function stopVoting() external {
         require(votingIsActive, "You cannot stop inactive voting");
         votingIsActive = false;
     }
