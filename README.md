@@ -5,14 +5,20 @@ This project is a Solidity-based implementation of the commit-reveal voting patt
 
 ## Table of Contents
 
+- [Data Accessibility in Solidity](#accessibility-of-data-stored-in-solidity-contracts)
 - [Commit-Reveal Pattern](#commit-reveal-pattern)
 - [Features and Functionality](#features-and-functionality)
 - [Tests](#tests)
 - [Running the Project Locally](#running-the-project-locally)
 
+## Accessibility of Data Stored in Solidity Contracts
+> [!IMPORTANT]  
+> #### All data stored in Solidity contracts is inherently public, as the blockchain functions as a transparent and immutable ledger
+Even state variables marked as private are accessible through blockchain explorers or by querying the blockchain directly. This transparency necessitates careful handling of sensitive information: developers should use cryptographic techniques such as hashing and encryption to protect data, and consider off-chain storage for highly sensitive information. In patterns like commit-reveal, hashing is used to maintain the confidentiality of votes until the reveal phase, demonstrating a practical application of these principles
+
 ## Commit-Reveal Pattern
 
-The commit-reveal pattern is a common technique in blockchain development used to achieve fairness in processes such as voting. It consists of two phases:
+The commit-reveal pattern is a common technique in blockchain development used to achieve fairness and privacy in processes such as voting. It consists of two phases:
 1. **Commit Phase**: Participants submit a hash of their vote, which keeps their actual vote secret.
 2. **Reveal Phase**: Participants reveal their actual votes and a secret value that was used to create the hash during the commit phase. This ensures the vote was not altered after the commit.
 
