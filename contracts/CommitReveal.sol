@@ -7,7 +7,7 @@ contract CommitReveal {
     mapping(address => bytes32) public commits;
     mapping(address => uint) public votesCount;
 
-    bool votingIsActive;
+    bool public votingIsActive;
 
     constructor(address[] memory _candidates) {
         require(_candidates.length >= 2, "Minimum number of candidates is 2");
@@ -34,8 +34,8 @@ contract CommitReveal {
 
     function revealVote(address candidate, bytes32 _secret) external {
         require(isCandidate[candidate], "No such candidate");
-        bytes32 commit = keccak256(abi.encode(candidate, _secret, msg.sender));
-        require(commits[msg.sender] == commit);
+        bytes32 commit = keccak256(abi.encodePacked(candidate, _secret, msg.sender));
+        require(commits[msg.sender] == commit, "Invalid data");
         votesCount[candidate]++;
     }
 
